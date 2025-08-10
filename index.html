@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Dancing Script', cursive;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        }
+
+        .background-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 
+.heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 82, 82, 0.3);
+            animation: floatHeart 15s linear infinite;
+        }
+ */
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff4d4d;
+            transform: rotate(45deg);
+            animation: floatHeart 4s linear infinite;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: #ff4d4d;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: -10px;
+        }
+
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+/* Base modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 4rem;
+    border-radius: 20px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    text-align: center;
+    width: 80%;
+    height: 60%;
+    max-width: 600px;
+    max-height: 400px;
+    transition: all 0.3s ease;
+}
+
+/* Dark theme styles */
+.modal.dark {
+    background: #2e2e2e; /* Dark background color */
+    font-family: 'Roboto', sans-serif; /* Modern, bold font */
+}
+
+.modal-content.dark h2 {
+    font-family: 'Oswald', sans-serif; /* Bold, impactful font */
+    font-size: 2.5rem;
+    color: #FFD700; /* Gold color for text */
+    text-transform: uppercase; /* Make text uppercase for emphasis */
+}
+
+.btn.dark {
+    background: #FF4500; /* Orange-red color */
+}
+
+.btn.dark:hover {
+    background: #FF6347; /* Lighter red on hover */
+}
+
+/* Romantic theme styles */
+.modal.romantic {
+    background: #f7f7f7; /* Light background color */
+}
+
+.modal-content.romantic h2 {
+    font-family: 'Lobster', cursive; /* Romantic, stylish font */
+    font-size: 2.5rem;
+    color: #DC143C; /* Crimson color for text */
+}
+
+.btn.romantic {
+    background: #9F2B68; /* Pink color */
+}
+
+.btn.romantic:hover {
+    background: #FF1493; /* Darker pink on hover */
+}
+
+
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .question {
+                font-size: 1.2rem;
+            }
+
+            button {
+                padding: 0.6rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* 
+@keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0;
+            }
+        }
+ */
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+.page {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+
+        .main-page {
+            display: block;
+        }
+
+        h1 {
+            color: #ff4d6d;
+            margin-bottom: 20px;
+            font-size: 3em;
+            font-family: 'Pacifico', cursive;
+            opacity: 0;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            opacity: 0;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .yes-btn {
+            background: #ff4d6d;
+            color: white;
+        }
+
+        .no-btn {
+            background: #ffb3c1;
+            color: #ff4d6d;
+        }
+
+        /* 
+.modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transform: scale(0);
+            font-size: 1.5em;
+        }
+ */
+
+        .slider-container {
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .slider-image {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background-size: cover;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .slider {
+            width: 100%;
+            height: 30px;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #ff4d6d 0%, #ff4d6d 50%, #ffb3c1 50%, #ffb3c1 100%);
+            border-radius: 15px;
+            outline: none;
+            margin: 20px 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 50px;
+            height: 50px;
+            background: #ff4d6d;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+       .final-page {
+        position: relative;
+        overflow: hidden;
+        height: 100vh; /* Make sure the final-page takes the full viewport height */
+    }
+
+    .cat-container {
+        width: 100%;
+        height: 100%;
+        position: absolute; /* Ensure the container covers the whole page */
+        top: 0;
+        left: 0;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .background-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 24px;
+            color: #ff4d6d;
+            pointer-events: none;
+            animation: float 3s ease-in infinite;
+        }
+        
+        .valentine-text {
+        position: absolute;
+        top: 65%; /* Adjust the value to move the text lower */
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Great Vibes', cursive;
+        font-size: 48px;
+        color: #ff69b4;
+        text-shadow: 2px 2px 4px #000000;
+        animation: float 2s infinite;
+    }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes float {
+        0% {
+            transform: translate(-50%, -50%) translateY(0);
+        }
+        50% {
+            transform: translate(-50%, -50%) translateY(-20px);
+        }
+        100% {
+            transform: translate(-50%, -50%) translateY(0);
+        }
+    }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .btn-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .slider-image {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts"></div>
+
+    <div class="container">
+        <!-- Main Page -->
+        <div class="page main-page">
+            <h1 id="hello-text">Hello You</h1>
+            <h1 id="question-text">Do you love Me?</h1>
+            <div class="btn-container">
+                <button class="btn yes-btn" onclick="handleYes()">YES</button>
+                <button class="btn no-btn" onclick="handleNo()">NO</button>
+            </div>
+        </div>
+
+        <!-- Slider Page -->
+        <div class="page slider-page">
+            <h1 id="hello-text2">Aww, Slide right to open ❤️</h1>
+            <div class="slider-container">
+                <div class="slider-image"></div>
+                <input type="range" min="0" max="100" value="0" class="slider" id="love-slider">
+            </div>
+        </div>
+
+        <!-- Final Page -->
+<div class="page final-page">
+    <div class="cat-container">
+        <img src="/Users/c2197851/Downloads/Me10.jpeg" alt="Friend's Background" class="background-image">
+    </div>
+<h2 class="valentine-text">Happy Valentine's Day! ❤️</h2>
+</div>
+
+<!-- Modal -->
+<div class="modal dark">
+    <div class="modal-content dark">
+        <h2 class="modal-text" id="modal-text">I will kick your ass, Hit YES 😢</h2>
+        <button class="btn yes-btn dark" onmouseover="romanticTheme()" onmouseout="darkTheme()" onclick="handleYes()">YES</button>
+    </div>
+</div>
+ 
+    <!-- Audio -->
+<audio id="background-music" autoplay loop>
+    <source src="/Users/c2197851/Downloads/arya2128kbpsmp3-36480.mp3" type="audio/mpeg">
+</audio>
+
+
+    <script>
+        // Create background hearts
+        function createBackgroundHearts() {
+            const container = document.querySelector('.background-hearts');
+            const heartSymbols = ['❤️', '💖', '💝', '💕', '💗'];
+            
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.animationDelay = `${Math.random() * 15}s`;
+                //heart.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                container.appendChild(heart);
+            }
+        }
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.querySelector('.hearts').appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        setInterval(createHeart, 300);
+
+        // Initial animations
+        gsap.to("#hello-text", {
+            opacity: 1,
+            duration: 1,
+            y: 20,
+            ease: "power2.out"
+        });
+        
+        // Fade-in with a soft pink glow
+gsap.to("#hello-text1", {
+    opacity: 1,
+    duration: 2,
+    y: 20,
+    ease: "power2.out",
+    color: "#FF69B4", // Pink color
+    fontSize: "2em",
+    fontFamily: "Cursive",
+    textShadow: "0 0 10px #FF69B4"
+});
+
+// Adding a gentle pulse effect
+gsap.to("#hello-text2", {
+    opacity: 1,
+    duration: 1,
+    y: 20,
+    scale: 1.2,
+    ease: "power2.out",
+    repeat: -1,
+    yoyo: true,
+    color: "#DC143C", // Light pink color
+    fontSize: "2.5em",
+    fontFamily: "Lobster, Cursive",
+    textShadow: "0 0 20px #DC143C"
+});
+
+// Creating a floating heart animation
+gsap.to("#hello-text3", {
+    opacity: 1,
+    duration: 1.5,
+    y: -30,
+    ease: "elastic.out(1, 0.3)",
+    repeat: -1,
+    yoyo: true,
+    color: "#DC143C", // Crimson color
+    fontSize: "3em",
+    fontFamily: "Lobster, Cursive",
+    textShadow: "0 0 20px #DC143C"
+});
+
+        gsap.to("#question-text", {
+            opacity: 1,
+            duration: 1,
+            delay: 1,
+            y: 20,
+            ease: "power2.out"
+        });
+
+        gsap.to(".btn-container", {
+            opacity: 1,
+            duration: 1,
+            delay: 2,
+            y: 20,
+            ease: "power2.out"
+        });
+
+        function switchPage(fromPage, toPage) {
+            gsap.to(fromPage, {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.5,
+                onComplete: () => {
+                    fromPage.style.display = 'none';
+                    toPage.style.display = 'block';
+                    gsap.fromTo(toPage, 
+                        { opacity: 0, scale: 0.8 },
+                        { opacity: 1, scale: 1, duration: 0.5 }
+                    );
+                }
+            });
+        }
+
+        function handleYes() {
+            switchPage(
+                document.querySelector(".main-page"),
+                document.querySelector(".slider-page")
+            );
+            closeModal();
+        }
+
+        function handleNo() {
+            const modal = document.querySelector(".modal");
+            const modalContent = document.querySelector(".modal-content");
+            
+            modal.style.display = "flex";
+            gsap.to(modalContent, {
+                scale: 1,
+                duration: 0.3,
+                ease: "back.out"
+            });
+        }
+
+        function closeModal() {
+            const modalContent = document.querySelector(".modal-content");
+            gsap.to(modalContent, {
+                scale: 0,
+                duration: 0.3,
+                ease: "back.in",
+                onComplete: () => {
+                    document.querySelector(".modal").style.display = "none";
+                }
+            });
+        }
+
+        // Slider functionality
+        const slider = document.getElementById("love-slider");
+        const sliderImage = document.querySelector(".slider-image");
+        
+        const images = [
+            "/Users/c2197851/Downloads/Me5.jpeg",  // 0%
+            "/Users/c2197851/Downloads/Me7.jpeg",  // 50%
+            "/Users/c2197851/Downloads/Me6.jpeg"   // 100%
+        ];
+
+        slider.addEventListener("input", function() {
+            const value = parseInt(this.value);
+            updateSliderImage(value);
+            
+            // Update slider background gradient
+            this.style.background = `linear-gradient(to right, #ff4d6d 0%, #ff4d6d ${value}%, #ffb3c1 ${value}%, #ffb3c1 100%)`;
+
+            if (value === 100) {
+                gsap.to(sliderImage, {
+                    scale: 1.5,
+                    duration: 0.5,
+                    onComplete: () => {
+                        setTimeout(showFinalPage, 500);
+                    }
+                });
+            }
+        });
+
+        function updateSliderImage(value) {
+            let imageIndex;
+            if (value < 33) {
+                imageIndex = 0;
+            } else if (value < 66) {
+                imageIndex = 1;
+            } else {
+                imageIndex = 2;
+            }
+            sliderImage.style.backgroundImage = `url(${images[imageIndex]})`;
+        }
+
+        function showFinalPage() {
+            switchPage(
+                document.querySelector(".slider-page"),
+                document.querySelector(".final-page")
+            );
+            startHeartAnimation();
+        }
+        
+function romanticTheme() {
+    document.querySelector('.modal').classList.remove('dark');
+    document.querySelector('.modal').classList.add('romantic');
+    document.querySelector('.modal-content').classList.remove('dark');
+    document.querySelector('.modal-content').classList.add('romantic');
+    document.querySelector('.btn').classList.remove('dark');
+    document.querySelector('.btn').classList.add('romantic');
+    
+    // Change the text content
+    document.getElementById('modal-text').textContent = "I know You Love Me 💖";
+}
+
+function darkTheme() {
+    document.querySelector('.modal').classList.remove('romantic');
+    document.querySelector('.modal').classList.add('dark');
+    document.querySelector('.modal-content').classList.remove('romantic');
+    document.querySelector('.modal-content').classList.add('dark');
+    document.querySelector('.btn').classList.remove('romantic');
+    document.querySelector('.btn').classList.add('dark');
+
+    // Change the text content
+    document.getElementById('modal-text').textContent = "I will kick your ass, Hit YES 😢";
+}
+
+
+
+        // function startHeartAnimation() {
+//             setInterval(createHeart, 300);
+//         }
+// 
+//         function createHeart() {
+//             const heart = document.createElement('div');
+//             heart.innerHTML = '❤️';
+//             heart.className = 'floating-heart';
+//             heart.style.left = Math.random() * window.innerWidth + 'px';
+//             document.body.appendChild(heart);
+// 
+//             setTimeout(() => heart.remove(), 3000);
+//         }
+    </script>
+</body>
+</html>
